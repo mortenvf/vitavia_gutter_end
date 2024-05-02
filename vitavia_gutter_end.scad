@@ -1,15 +1,15 @@
+
+$fn=50;
+
 //
-// This is a model for a replacement downpipe adaptor for the Vitavia Sirius greenhouse (and
-// possibly other Vitavia greenhouses), it can be used to replace a broken original part, or
-// to add downpipes in additional corners of the greenhouse. It can also be modified if you
+// This is a model for a replacement downpipe adaptor for Vitavia greenhouses,
+// it can be used to replace a broken original part, or to add downpipes in
+// additional corners of the greenhouse. It can also be modified if you
 // want to fit a different type of downpipe.
 //
 
 // this describes one half of the gutter profile, it is mirrored to make the whole shape
 g_profile = [[0,0],[-37/2,0],[-39/2,18.5],[-35/2,22.5],[0,22.5]];
-
-
-$fn=50;
 
 g_gutter_extend_in = 100;
 g_gutter_extend_out = 16;
@@ -48,74 +48,6 @@ module gutter_profile_inner()
 }
 
 
-module profile_hollow()
-{
-    difference()
-    {
-        profile_full();
-        profile_full_inner();
-        // this triangle cuts out the top of the profile to open the gutter
-        polygon([[0,5],g_profile[3],[-g_profile[3][0],g_profile[3][1]],[0,5]]);
-    }
-}
-
-module downpipe(radius=16,height=100)
-{
-    rotate([90,0,0])
-        cylinder(d=radius*2,h=height,center=true);
-}
-
-
-module sidepipe(radius=16,height=100)
-{
-    rotate([90,0,90])
-        cylinder(d=radius*2,h=height,center=true);
-}
-
-
-module vitavia_downpipe_adaptor()
-{
-    difference()
-    {
-        union()
-        {
-            // this is the end cap 0 scaled up a bit just to
-            // give it a border like the original parts.
-            linear_extrude(height=2)
-                scale([1.05,1.1,1])
-                    translate([0,-0.6,0])
-                        profile_full();
-            
-            // this is the bit that slides into the gutter
-            linear_extrude(height=g_gutter_connector_length)
-                profile_hollow();
-            
-            // add the downpipe solid
-            translate([0,-g_downpipe_connector_length/2,g_downpipe_connector_offset])
-                downpipe(g_downpipe_inner_radius,g_downpipe_connector_length);
-            
-            
-            // add the sidepipe solid
-            translate([0,-g_sidepipe_connector_length/2,g_downpipe_connector_offset])
-                sidepipe(g_downpipe_inner_radius,g_sidepipe_connector_length);
-           
-            
-            
-        }
-
-        // make a hole for the downpipe
-        translate([0,0,g_downpipe_connector_offset])
-            downpipe(g_downpipe_inner_radius-g_downpipe_connector_thickness);
-        
-        
-        // make a hole for the sidepipe
-        translate([0,-g_sidepipe_connector_length/2,g_downpipe_connector_offset])
-            sidepipe(g_downpipe_inner_radius-g_downpipe_connector_thickness,g_sidepipe_connector_length);
-    }
-
-}
-
-
 difference() {
     
     union() {
@@ -129,14 +61,13 @@ difference() {
         translate([0,-g_downpipe_length/2,0]) rotate([90,0,0]) cylinder(d=g_downpipe_outer_diam, h=g_downpipe_length, center=true, $fn=100);
         
         // Sidepipe outer
-        #translate([-g_sidepipe_length/2,g_sidepipe_adjust_y,0])
+        translate([-g_sidepipe_length/2,g_sidepipe_adjust_y,0])
             rotate([0,90,0])
             union() {
                 translate([0,0,g_sidepipe_length/2])
                    sphere(d=g_sidepipe_outer_diam);
                 cylinder(d=g_sidepipe_outer_diam, h=g_sidepipe_length, center=true);
             };
-        
         
         
     }
@@ -152,7 +83,7 @@ difference() {
         
         
         // Sidepipe inner
-        #translate([-g_sidepipe_length/2,g_sidepipe_adjust_y,0]) rotate([0,90,0])
+        translate([-g_sidepipe_length/2,g_sidepipe_adjust_y,0]) rotate([0,90,0])
         union(){
             
                 translate([0,0,g_sidepipe_length/2])
@@ -160,8 +91,6 @@ difference() {
             cylinder(d=g_sidepipe_outer_diam-g_sidepipe_thickness, h=g_sidepipe_length, center=true);
         }
         
-        }
+    }
 }
-
-//vitavia_downpipe_adaptor();
 
