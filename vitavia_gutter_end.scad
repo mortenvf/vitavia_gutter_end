@@ -12,19 +12,20 @@ $fn=50;
 g_profile = [[0,0],[-37/2,0],[-39/2,18.5],[-35/2,22.5],[0,22.5]];
 
 g_gutter_extend_in = 100;
-g_gutter_extend_out = 16;
+g_gutter_extend_out = 17;
 g_gutter_endcap_thickness = 2;
 
 g_downpipe_length = 60;
 g_downpipe_outer_diam = 20;
 g_downpipe_thickness = 4;
-g_downpipe_extend_inner = 4; // extend downpipe inner to break through gutter bottom
+g_downpipe_extend_up = 30;
 
 
-g_sidepipe_adjust_y = 5;
+
+g_sidepipe_adjust_y = 16;
 g_sidepipe_length = 60;
 g_sidepipe_outer_diam = 32;
-g_sidepipe_thickness = 4;
+g_sidepipe_thickness = 3;
 
 
 module gutter_profile_outer()
@@ -47,9 +48,7 @@ module gutter_profile_inner()
     }
 }
 
-
 difference() {
-    
     union() {
         
         // Outer gutter
@@ -58,7 +57,7 @@ difference() {
                 gutter_profile_outer();
         
         // Downpipe outer
-        translate([0,-g_downpipe_length/2,0]) rotate([90,0,0]) cylinder(d=g_downpipe_outer_diam, h=g_downpipe_length, center=true, $fn=100);
+        translate([0,-g_downpipe_length/2,0]) rotate([90,0,0]) cylinder(d=g_downpipe_outer_diam, h=g_downpipe_length+g_downpipe_extend_up, center=true);
         
         // Sidepipe outer
         translate([-g_sidepipe_length/2,g_sidepipe_adjust_y,0])
@@ -79,7 +78,7 @@ difference() {
                 gutter_profile_inner();
         
                 // Downpipe inner
-        translate([0,-g_downpipe_length/2,0]) rotate([90,0,0]) cylinder(d=g_downpipe_outer_diam-g_downpipe_thickness, h=g_downpipe_length+g_downpipe_extend_inner, center=true);
+        translate([0,-g_downpipe_length/2,0]) rotate([90,0,0]) cylinder(d=g_downpipe_outer_diam-g_downpipe_thickness, h=g_downpipe_length+g_downpipe_extend_up, center=true);
         
         
         // Sidepipe inner
@@ -93,4 +92,3 @@ difference() {
         
     }
 }
-
