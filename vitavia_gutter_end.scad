@@ -43,7 +43,7 @@ module gutter_profile_inner()
         scale([0.925, 0.925,1])
           translate([0, 1.6, 0])
             gutter_profile_outer();
-        polygon([[0, 5], g_profile[3], [-g_profile[3][0], g_profile[3][1]], [0, 5]]);
+        polygon([[0, 10], g_profile[3], g_profile[3]+[0, 50], [-g_profile[3][0], g_profile[3][1]+50], [-g_profile[3][0], g_profile[3][1]]]);
     }
 }
 
